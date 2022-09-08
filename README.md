@@ -17,3 +17,9 @@ Muut voivat sitten kommentoida ärsytyksenaiheita. Keskustelupalstan ulkoasu tul
 - Vain ylläpitäjä näkee ilmoitetut aloitukset ja viestit. 
 
 ## Palautusten sisällöt
+### Välipalautus 1:
+- Suunnittelin minkälaisen sovelluksen teen.
+- Aloitin tekemään jo käyttäjätoimintoja kirjautumiseen ja tunnuksen luontiin (mikään ei ole lokaalisti toiminnassa)
+- Pohdin herokun käyttöönottoa, mutta ajattelin että teen sen ohjaajan kanssa jotta se ehkä toimisi tällä kertaa.
+- Kirjoitin pohjan static kansioon sekä loin jo ensimmäiset html pohjat.
+- Päivitin README:en tärkeimmät jotta etenemistä on helppo seurata :)

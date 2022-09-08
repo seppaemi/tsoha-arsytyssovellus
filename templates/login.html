@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="flexbox-content_container">
+    <div class="form">
+        <form action="/login" method="post">
+        <div class="error">
+        {{ error1 }}
+        </div>
+        Tunnus: <input type="text" name="username">
+        <p>
+        Salasana: <input type="password" name="password">
+        <p>
+        <input type="submit" value="Kirjaudu">
+        <p>Tunnuksen puuttuessa luo tunnus <a href="/register">tästä</a></p>
+        </form>
+    </div>
+    <div class="nav">
+        <ul>
+            <li><a href="/">Etusivu</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 
