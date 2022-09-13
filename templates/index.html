@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% block content %}
+{% if session.user_id %}
+    <div class="flexbox-content_container">
+        <div class="forum">
+            <div class="regions">
+                <h2>Keskustelualueet</h2>
+                {% for region in regions %}
+                <a href="/messages/{{ region[0] }}/{{ region[2] }}">{{ region[0] }}</a>
+                <p>
+                <i>Lähettäjä:</i> {{ region[1] }}
+                <p>
+                <i>Lisätty:</i> {{ region[2].strftime("%Y-%m-%d %H:%M:%S") }}
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+            <div class="nav">
+                <ul>
+                <li><a href="/new_region">Lisää aihe</a></li>
+                <li><a href="/query">Etsi viesti hakusanalla</a></li>
+                {% if is_admin %} <li><a href="/admin">Ylläpito</a></li> {% endif %}
+                <li><a href="/logout">Kirjaudu ulos</a></li>
+                </ul>
+            </div>
+    </div>
+    <div class="footer-container">
+        <div class="footer"><p>Olet kirjautunut käyttäjänimellä {{ user_name }}</p></div>
+    </div>
+    {% else %}
+    <div class="flexbox-content_container">
+        <div class="forum">
+            <div class="regions">
+                <h2>Keskustelualueet</h2>
+                {% for region in regions %}
+                {{ region[0] }}
+                <i>Lisätty:</i> {{ region[2].strftime("%Y-%m-%d %H:%M:%S") }}
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="nav_index">
+        <a href="/login">Kirjaudu sisään</a> | Ei vielä tunnusta? <a href="/register">Luo tunnus täällä!</a>
+        <p> Kirjautumalla sisään voit luoda uuden keskustelualueen, näet myös kaikkien alueiden viestiketjut ja voit lisätä niihin oman viestisi.</p>
+        </div>
+        <p>
+
+    </div>
+{% endif %} 
+{% endblock %} 
