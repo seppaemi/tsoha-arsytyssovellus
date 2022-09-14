@@ -20,6 +20,9 @@ def login(username, password):
 def logout():
     del session["user_id"]
 
+def user_id():
+    return session.get("user_id",0)
+
 def register(username, password):
     hash_value = generate_password_hash(password)
     try:
@@ -40,10 +43,6 @@ def get_user_name():
         return username
     else:
         return False
-
-
-def user_id():
-    return session.get("user_id",0)
 
 def check_csrf():
     if session["csrf_token"] != request.form["csrf_token"]:
