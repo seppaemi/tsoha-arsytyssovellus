@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %} Rekisteröityminen {% endblock %}
+
+{% block content %}    
+    <p style="margin-top:1em">
+        <a href="/"><strong>← Etusivu</strong></a>
+    </p>
+
+    <div id="middle">
+        <form action="/register" method="POST">
+            Käyttäjänimi: <br>
+            <input type="text" name="username"> <br>
+
+            Salasana: <br>
+            <input type="password" name="password"> <br>
+            Salasana uudelleen: <br>    
+            <input type="password" name="confirm"> <br><br>
+
+            <input type="submit" value="Rekisteröidy">
+        </form>
+    </div>
+
+    {% for message in get_flashed_messages() %}
+        <strong style="color:red">{{message}}</strong>
+    {% endfor %}
+{% endblock %}

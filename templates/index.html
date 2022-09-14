@@ -53,10 +53,10 @@
         <p>
         {% if session.admin %}
             <form action="/createforum" method="POST">
-                <input type="text" name="topic" placeholder="Aihe">
+                <input type="text" name="topic" placeholder="Ärsytyksenaihe">
                 <input type="checkbox" id="hidden" name="hidden">
                 <label for="hidden">Piilotettu</label> <br>
-                <input type="submit" value="Tee uusi aihe">
+                <input type="submit" value="Uusi ärsytyksenaihe">
                 <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
             </form>
         {% endif %}
