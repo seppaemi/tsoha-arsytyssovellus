@@ -4,6 +4,7 @@ from db import db
 import user
 import forum
 import secrets
+import thread
 
 
 def error(message, destination):
@@ -85,4 +86,62 @@ def demote():
     if user_id:
         user.demote(user_id)
         session["admin"] = False
+    return redirect("/")
+
+@app.route("/forums/<int:id>")
+def render_forum(id):
+    exists = forum.exists(id)
+    edit = request.args.get("edit") == "1"
+    if exists:
+        threads = thread.get_all(id)
+        found_forum = forum.get(id)
+        if found_forum[1] and not session.get("admin") and found_forum[0] not in session.get("allowed", []):
+            return render_template("norights.html")
+        return render_template("forum.html", forum=found_forum, threads=threads, edit=edit)
+    else:
+        return redirect("/")
+
+@app.route("/createthread", methods=["POST"])
+def create_thread():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    if session.get("id"):
+        title = request.form.get("title")
+        forum_id = request.form.get("forum_id")
+        if len(title) > 50:
+            return error("Otsikko ei saa olla yli 50 merkkiä pitkä", f"/forums/{forum_id}")
+        if not thread.create(title, forum_id, session["id"]):
+            flash("Langan otsikko ei voi olla tyhjä.") 
+    return redirect(f"/forums/{forum_id}")
+
+@app.route("/deletethread", methods=["POST"])
+def delete_thread():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    thread_id = request.form.get("thread_id")
+    forum_id = request.form.get("forum_id")
+    if thread_id:
+        thread.delete(forum_id, thread_id, session.get("admin"), session.get("id"))
+    return redirect(f"/forums/{forum_id}?edit=1")
+
+@app.route("/createforum", methods=["POST"])
+def create_forum():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    if session.get("admin"):
+        topic = request.form.get("topic")
+        hidden = request.form.get("hidden")
+    if len(topic) > 50:
+            return error("Ärsytyksenaihe ei saa olla yli 50 merkkiä pitkä", "/")
+    if not forum.create(topic, bool(hidden)):
+        flash("Aiheen nimi ei voi olla tyhjä.")       
+    return redirect("/")
+
+@app.route("/deleteforum", methods=["POST"])
+def delete_forum():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    if session.get("admin"):
+        forum_id = request.form.get("forum_id")
+        forum.delete(forum_id)
     return redirect("/")
