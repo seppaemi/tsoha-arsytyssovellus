@@ -1,138 +1,42 @@
-@charset "UTF-8";
-body{
-    background-color: fuchsia;
+body {
+    background:hotpink;
+    margin: auto;
+    max-width: 45em;
     font-family: cursive;
+    word-wrap: break-word;
 }
-
-ul{
-    list-style-type: none;
+h4 {
+    margin:0;
 }
-
-a{
-    text-decoration: none;
-
+hr {
+    border-top: 1px solid blueviolet;
 }
-.container{
-    width: 1600px;
-    background-color: lime;
-    margin-left: auto;
-    margin-right: auto;
-
+#top-bar {
+    background:yellow;
+    font-weight:bold;
+    padding: 1em;
+    margin-top: 1em;
+    border-radius: .5em
 }
-
-.header {
-    color: deeppink;
-    background-color: aqua;
-    font-family: cursive;
-    text-align: center;
-    padding: 10px;
-    
+#top-bar a {
+    color:green;
 }
-
-
-.flexbox-content_container{
-    display: flex;
-    justify-content:space-around;
-    align-items: flex-start;
-    min-height: 75vh;
+a {
+    color: violet;
+    font-weight: bold;
 }
-
-.forum{
-    width: 700px;
-    margin: 10px;
-    padding: 10px;
-    background-color: deeppink;
-    font-family: cursive;
-    color: black;
-    display: flex;
+#middle {
+    background:oldlace;
+    border-radius: .5em;
+    margin-top: 2em;
+    padding: 1em;
 }
-
-.areas{
-    align-self: stretch;
-
+#bottom {
+    background:oldlace;
+    border-radius: 1em;
+    margin-top: 1em;
+    padding: 1em;
 }
-
-.message-box{
-    background-color: deeppink;
-    border-radius: 15px 50px 30px 1px;
-    font-family: cursive;
-    color: black;
-    margin: 3px;
-    padding: 7px;
-
-}
-
-.own-message-box{
-    background-color: lime;
-    border-radius: 15px 50px 1px 30px;
-    font-family: cursive;
-    color: black;
-    margin: 3px;
-    padding: 7px;
-
-}
-
-
-
-.nav_index{
-    margin: 10px;
-    width: 600px;
-    float: right;
-    padding: 10px;
-    font-family: cursive;
-    background-color: lime;
-    text-align: center;
-    align-self: flex-start;
-    color: black;
-}
-
-.nav{
-    width: 300px;
-    margin: 10px;
-    font-family: cursive;
-    background-color: lime;
-    text-align: left;
-    align-self: flex-start;
-    color: black;
-
-}
-
-.username_info{
-    padding: 10px;
-    width:600px;
-    text-align: right;
-    color: black;
-    align-self: flex-end;
-    background-color: deeppink;
-
-}
-
-.form{
-    background-color: lime;
-    margin: 10px;
-    padding: 10px;
-    width: 600px;
-    font-family: cursive;
-    align-self: flex-start;
-    color: black;
-}
-
-.error{
-    color:red;
-}
-
-.footer-container{
-    background-color:lime; 
-    margin: 10px;
-    display: flex;
-    min-height: 5vh;
-    width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-}
-
-.footer{
-    padding: 10px;
-    color: black;
+th, td {
+    padding: 0 1em 0 0;
 }

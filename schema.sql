@@ -1,38 +1,36 @@
-CREATE TABLE users (
-	 id SERIAL PRIMARY KEY,
-	 username TEXT UNIQUE,
-	 password TEXT,
-	 is_admin BOOLEAN
-);
-
-CREATE TABLE regions (
-    id SERIAL PRIMARY KEY,
-    content TEXT,
-    user_id INTEGER REFERENCES users,
-    sent_at TIMESTAMP,
-    visible BOOLEAN
-);
-
-CREATE TABLE messages (
-    id SERIAL PRIMARY KEY,
-    content TEXT,
-    user_id INTEGER REFERENCES users,
-    region_id INTEGER REFERENCES regions,
-    sent_at TIMESTAMP,
-    visible BOOLEAN
-);
-
-CREATE TABLE info (
+CREATE TABLE IF NOT EXISTS users (
 	id SERIAL PRIMARY KEY,
-	day DATE,
-	time TIME,
-	message_id INTEGER REFERENCES messages,
-	location TEXT
+	administrator BOOLEAN,
+	username TEXT,
+	password TEXT
 );
 
-CREATE TABLE images (
+CREATE TABLE IF NOT EXISTS forums (
 	id SERIAL PRIMARY KEY,
-	name TEXT,
-	data BYTEA,
-	message_id INTEGER REFERENCES messages
+	hide BOOLEAN,
+	topic TEXT,
+	messagecount INTEGER DEFAULT 0,
+	threadcount INTEGER DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS threads (
+	id SERIAL PRIMARY KEY,
+	forum_id INTEGER REFERENCES forums ON DELETE CASCADE,
+	created_by INTEGER REFERENCES users,
+	title TEXT,
+	created_at TIMESTAMP,
+	messagecount INTEGER DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+	id SERIAL PRIMARY KEY,
+	thread_id INTEGER REFERENCES threads ON DELETE CASCADE,
+	user_id INTEGER REFERENCES users,
+	content TEXT,
+	sent_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS allow (
+	user_id INTEGER REFERENCES users ON DELETE CASCADE,
+	forum_id INTEGER REFERENCES forums ON DELETE CASCADE
 );

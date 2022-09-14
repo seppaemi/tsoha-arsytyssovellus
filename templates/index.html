@@ -1,51 +1,69 @@
-<!DOCTYPE html>
 {% extends "layout.html" %}
 {% block content %}
-{% if session.user_id %}
-    <div class="flexbox-content_container">
-        <div class="forum">
-            <div class="regions">
-                <h2>Keskustelualueet</h2>
-                {% for region in regions %}
-                <a href="/messages/{{ region[0] }}/{{ region[2] }}">{{ region[0] }}</a>
-                <p>
-                <i>Lähettäjä:</i> {{ region[1] }}
-                <p>
-                <i>Lisätty:</i> {{ region[2].strftime("%Y-%m-%d %H:%M:%S") }}
-                <hr>
-                {% endfor %}
-            </div>
-        </div>
-            <div class="nav">
-                <ul>
-                <li><a href="/new_region">Lisää aihe</a></li>
-                <li><a href="/query">Etsi viesti hakusanalla</a></li>
-                {% if is_admin %} <li><a href="/admin">Ylläpito</a></li> {% endif %}
-                <li><a href="/logout">Kirjaudu ulos</a></li>
-                </ul>
-            </div>
+    <div id="top-bar">
+        <p style="float:right; padding-top:0.5em;">
+            {% if session.username %}
+                <a href="/logout"> Kirjaudu ulos</a>
+                <br>
+                {% if session.admin %}
+                    <a href="/demote/">Vaihda käyttäjäksi</a>
+                {% else %}
+                    <a href="/promote/">Vaihda ylläpitäjäksi</a>
+                {% endif %}
+            {% else %}
+                <a href="/login">Kirjaudu sisään</a><br>tai <a href="/register">rekisteröidy</a>
+            {% endif %}
+        </p>
+        <h1>Tervetuloa ärsytyssovellukseen{% if session.username %}, {{session.username}}{% endif %}!</h1>        
     </div>
-    <div class="footer-container">
-        <div class="footer"><p>Olet kirjautunut käyttäjänimellä {{ user_name }}</p></div>
-    </div>
-    {% else %}
-    <div class="flexbox-content_container">
-        <div class="forum">
-            <div class="regions">
-                <h2>Keskustelualueet</h2>
-                {% for region in regions %}
-                {{ region[0] }}
-                <i>Lisätty:</i> {{ region[2].strftime("%Y-%m-%d %H:%M:%S") }}
-                <hr>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="nav_index">
-        <a href="/login">Kirjaudu sisään</a> | Ei vielä tunnusta? <a href="/register">Luo tunnus täällä!</a>
-        <p> Kirjautumalla sisään voit luoda uuden keskustelualueen, näet myös kaikkien alueiden viestiketjut ja voit lisätä niihin oman viestisi.</p>
-        </div>
-        <p>
 
+    
+    <div id="middle">
+        <p><a href="/search" style="float:right; padding-right:0.5em">Hae ärsytyksenaiheita</a></p>
+
+        <h3>Aiheet</h3>
+        <hr>
+        {% for forum in forums %}
+            {% if not forum.hide or session.admin or (session.allowed and forum.id in session.allowed) %}
+                <h4><a href="/forums/{{forum.id}}">{{forum.topic}}</a> {% if forum.hide %} (Piilota) {% endif %} <br></h4>
+
+                Lankoja ärsytyksessä: {{forum.threadcount}}<br>
+
+                Viestejä ärsytyksessä: {{forum.msgcount}} <br>
+
+                {% if forum.lastmsg %}
+                    Viimeisin ärsytys: {{forum.lastmsg.strftime("%d.%m.%Y klo %H:%M:%S")}}
+                {% endif %}
+
+                {% if session.admin %}
+                    <form action="/deleteforum" method="POST">
+                        <input type="submit" value="Poista aihe">
+                        {% if forum.hide %}<button type="button" onclick="location.href='manage-rights?id={{forum.id}}'">Muokkaa pääsyoikeuksia</button>{% endif %}
+                        <input type="hidden" name="forum_id" value="{{forum.id}}">
+                        <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+                    </form>
+                {% endif %}                
+                {% if not loop.last %}<hr>{% endif %}
+            {% endif %}
+        {% endfor %}
     </div>
-{% endif %} 
-{% endblock %} 
+
+    {% if session.admin or get_flashed_messages() %}
+    <div id="bottom">
+        <p>
+        {% if session.admin %}
+            <form action="/createforum" method="POST">
+                <input type="text" name="topic" placeholder="Aihe">
+                <input type="checkbox" id="hidden" name="hidden">
+                <label for="hidden">Piilotettu</label> <br>
+                <input type="submit" value="Tee uusi aihe">
+                <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+            </form>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <strong style="color:red">{{message}}</strong>
+        {% endfor %}   
+        </p> 
+    </div>
+    {% endif %}
+{% endblock %}
