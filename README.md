@@ -26,4 +26,5 @@ Muut voivat sitten kommentoida ärsytyksenaiheita. Keskustelupalstan ulkoasu tul
 
 ### Välipalautus 2:
 - User luokka toimii ja sovellus toimii lokaalisti
-- Voi luoda tunnuksen 
+- Voi luoda tunnuksen ja tunnuksen luotua sovellus kirjautuu automaattisesti sisään
+- Jos kirjautuu ulos, vaikka salasana olisi oikein, ei pääse samalla tunnuksella kirjautumaan takaisin sisään
