@@ -1,5 +1,7 @@
 # Ärsytyssovellus tietokantasovelluskurssille
 
+[Linkki sovellukseen](https://tsoha-arsytyspalsta.herokuapp.com/)
+
 ## Kuvaus
 Kurssin annetuista esimerkeistä keskustelupalstan kaltainen sovellus, joka on suunnattu ihmisille jotka haluavat jakaa havaitsemiaan asioita mitkä ärsyttää; kuten koirankakat, rakennustyämaat ja naapurikyttääjät.
 Muut voivat sitten kommentoida ärsytyksenaiheita. Keskustelupalstan ulkoasu tullaan suunnittelemaan myös mahdollisimman ärsyttäväksi :)
@@ -28,3 +30,4 @@ Muut voivat sitten kommentoida ärsytyksenaiheita. Keskustelupalstan ulkoasu tul
 - User luokka toimii ja sovellus toimii lokaalisti
 - Voi luoda tunnuksen ja tunnuksen luotua sovellus kirjautuu automaattisesti sisään
 - Käyttäjä voi kirjautua sisään
+- Sovellus toimii herokussa jee :)
