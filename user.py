@@ -42,8 +42,8 @@ def register(username, password):
 
 def check_password(username, password):
     user_sql = "SELECT password FROM users WHERE username=:username"
-    password = db.session.execute(user_sql, {"username":username}).fetchone()[0]
-    if check_password_hash(password, password):
+    compare = db.session.execute(user_sql, {"username":username}).fetchone()[0]
+    if check_password_hash(compare, password):
         return get(username)
     else:
         return None
