@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block title %} - {{forum.topic}}{% endblock %}
+
+{% block content %}
+    <div id="top-bar">
+        <p style="float:right; padding-top: 1em;">
+            <a href="/" >Etusivulle</a><br>
+        </p>
+        <h1>{{forum.topic}}</h1>
+    </div>
+
+
+    <div id="middle">     
+        {% if session.username %}
+            <p style="float:right; padding-top: 0.5em;">
+                {% if edit %}
+                    <a href="{{forum.id}}">Lopeta muokkaaminen</a>
+                {% else %}
+                    <a href="{{forum.id}}?edit=1">Muokkaa ketjuja</a>
+                {% endif %}
+            </p>
+        {% endif %}    
+        <h3>Ketjut aiheesta <wbr>{{forum.topic}}</h3>  
+        <hr>
+        {% if not threads %}
+            Ketjuja ei ole.
+        {% endif %}
+        {% for thread in threads %}
+            <div id="title_{{thread.id}}" style="display:block">        
+                <strong><a href="/thread/{{thread.id}}">{{thread.title}}</a></strong>
+
+                {% if edit %}
+                    {% if session.admin or session.username==thread.username %}
+                        <button onclick="edit({{thread.id}});">Muokkaa otsikkoa</button><br>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="edit_{{thread.id}}" style="display:none">
+                <form action="/editthread" method="POST" style="margin-bottom:0em">
+                    <input type="text" name="title" value="{{thread.title}}">
+                    <input type="hidden" name="thread_id" value="{{thread.id}}">
+                    <input type="hidden" name="forum_id" value="{{forum.id}}">
+                    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+                    <input type="submit" value="Muuta nimi">
+                    <button type="button" onclick="cancel({{thread.id}});">Peruuta</button>
+                </form>
+            </div>
+            
+            Luonut: {{thread.username}}<br>
+            Viestejä ketjussa: {{thread.msgcount}}
+            {% if thread.msgcount %}
+                <br>Viimeisin viesti: {{thread.lastmsg.strftime("%d.%m.%Y klo %H:%M:%S")}}
+            {% endif %}
+            {% if edit and (session.username == thread.username or session.admin) %}
+                <form action="/deletethread" method="POST">
+                    <input type="submit" value="Poista ketju">
+                    <input type="hidden" name="thread_id" value="{{thread.id}}">
+                    <input type="hidden" name="forum_id" value="{{forum.id}}">
+                    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+                </form>
+            {% endif %}
+            {% if not loop.last %}<hr>{% endif %}
+        {% endfor %}
+    </div>
+    <br>
+    {% if session.username or get_flashed_messages() %}
+        <div id="bottom">
+            {% if session.username %}
+            <form action="/createthread" method="POST">
+                <input type="text" name="title">
+                <input type="submit" value="Tee uusi ketju">
+                <input type="hidden" name="forum_id" value="{{forum.id}}">
+                <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+            </form>
+            {% endif %}
+            {% for message in get_flashed_messages() %}
+            <strong style="color:red">{{message}}</strong>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <script type="text/javascript">
+        function edit(thread_id) {
+            document.getElementById("edit_" + thread_id).style.display="block";
+            document.getElementById("title_" + thread_id).style.display="none";
+        }
+        function cancel(thread_id) {
+            document.getElementById("edit_" + thread_id).style.display="none";
+            document.getElementById("title_" + thread_id).style.display="block";
+        }
+    </script>
+{% endblock %}

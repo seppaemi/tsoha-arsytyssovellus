@@ -1,5 +1,5 @@
 from db import db
-#from counter import decrement_tc, increment_tc, sub moi
+from amount import decrement_tc, increment_tc, sub 
 
 def create(title, forum_id, user_id):
     if title.strip():

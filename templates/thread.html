@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block title %} - {{thread.title}}{% endblock %}
+
+{% block content %}
+<div id="top-bar">
+<p style="float:right; padding-top:1em;">
+<a href="/forums/{{thread.forum_id}}">← Takaisin aiheeseen</a> <br>
+</p>
+<h1>{{forum.topic}}</h1>
+</div>
+
+
+<div id="middle">
+{% if session.username %}
+    <p style="float:right; padding-top:0.5em;">
+        {% if edit %}
+            <a href="{{thread.id}}">Lopeta muokkaaminen</a>
+        {% else %}
+            <a href="{{thread.id}}?edit=1">Muokkaa viestejä</a>
+        {% endif %}
+    </p>
+{% endif %}
+<h3>{{thread.title}}</h3>
+<hr>
+{% if not messages %}
+    <p>Viestejä ei ole.</p>
+{% endif %}
+{% for message in messages %}
+    <div id="text_{{message.id}}" style="display:block"> 
+    <p>{{message.content}}</p>
+    <strong>Lähettänyt: {{message.username}} {{message.sent_at.strftime("%d.%m.%Y klo %H:%M:%S")}}</strong>
+    {% if edit and (session.username == message.username or session.admin) %}
+        <form action="/deletemessage" method="POST">
+            <input type="submit" value="Poista viesti">
+            <button type="button" onclick="edit({{message.id}});">Muokkaa viestiä</button><br>
+            <input type="hidden" name="message_id" value="{{message.id}}">
+            <input type="hidden" name="thread_id" value="{{thread.id}}">    
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+        </form>
+    {% endif %}
+    </div>
+
+    <div id="edit_{{message.id}}" style="display:none">
+        <form action="/editmessage" method="POST">
+            <textarea name="content" rows=5 cols=40>{{message.content}}</textarea><br>
+            <input type="hidden" name="message_id" value="{{message.id}}">
+            <input type="hidden" name="thread_id" value="{{thread.id}}">
+            <input type="submit" value="Vahvista muutokset">
+            <button type="button" onclick="cancel({{message.id}});">Peruuta</button>
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+        </form>
+    </div>
+
+    {% if not loop.last %}<hr>{% endif %}
+{% endfor %}
+
+</div>
+
+{% if session.username or get_flashed_messages() %}
+    <div id="bottom">
+        {% if session.username %}
+            <textarea name="content" form="newmessage" rows=5 cols=40 maxlength=500></textarea>
+            <form action="/createmessage" method="POST" id="newmessage">
+                <input type="submit" value="Lähetä viesti">
+                <input type="hidden" name="thread_id" value="{{thread.id}}">    
+                <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+            </form>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <strong style="color:red">{{message}}</strong>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script type="text/javascript">
+    function edit(message_id) {
+        document.getElementById("edit_" + message_id).style.display="block";
+        document.getElementById("text_" + message_id).style.display="none";
+    }
+    function cancel(message_id) {
+        document.getElementById("edit_" + message_id).style.display="none";
+        document.getElementById("text_" + message_id).style.display="block";
+    }
+</script>
+{% endblock %}

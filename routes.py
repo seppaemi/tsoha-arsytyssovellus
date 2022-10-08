@@ -5,6 +5,7 @@ import user
 import forum
 import secrets
 import thread
+import message
 
 
 def error(message, destination):
@@ -124,6 +125,40 @@ def delete_thread():
         thread.delete(forum_id, thread_id, session.get("admin"), session.get("id"))
     return redirect(f"/forums/{forum_id}?edit=1")
 
+@app.route("/thread/<int:id>")
+def render_thread(id):
+    found_thread = thread.get(id)
+    edit = request.args.get("edit") == "1"
+    
+    if found_thread is None:
+        return redirect("/")
+    
+    parent_id = thread.parent(id)
+    parent_forum = forum.get(parent_id)
+    if parent_forum[1] and not session.get("admin") and parent_forum[0] not in session.get("allowed", []):
+        return render_template("norights.html")
+
+    messages = message.get_all(id)
+    return render_template("thread.html", messages=messages, thread=found_thread, edit=edit, forum=parent_forum)
+
+@app.route("/editthread", methods=["POST"])
+def edit_thread():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    thread_id=request.form.get("thread_id")
+    title=request.form.get("title", "")
+    forum_id=request.form.get("forum_id")
+
+    if not title.strip():
+        return error("Aihe ei saa olla tyhjä", f"/forums/{forum_id}")
+
+    if thread_id and title:
+        if len(title) > 50:
+            return error("Aihe ei saa olla yli 50 merkkiä pitkä", f"/forums/{forum_id}")
+        thread.edit(thread_id, title, session.get("admin", False), session.get("id", 0))
+    
+    return redirect(f"/forums/{forum_id}?edit=1")
+
 @app.route("/createforum", methods=["POST"])
 def create_forum():
     if session.get("csrf_token") != request.form.get("csrf_token"):
@@ -145,3 +180,48 @@ def delete_forum():
         forum_id = request.form.get("forum_id")
         forum.delete(forum_id)
     return redirect("/")
+
+@app.route("/createmessage", methods=["POST"])
+def create_message():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    if not session.get("username"):
+        return redirect("/")
+
+    text = request.form.get("content")
+    thread_id = request.form.get("thread_id", "-1")
+    if len(text) > 500:
+        return error("Viesti ei saa olla yli 500 merkkiä pitkä", f"/thread/{thread_id}")
+    if not message.create(text, thread_id, session.get("id")):        
+        flash("Viesti ei voi olla tyhjä.")
+    return redirect(f"/thread/{thread_id}")
+
+@app.route("/deletemessage", methods=["POST"])
+def delete_message():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    message_id = request.form.get("message_id")
+    thread_id = request.form.get("thread_id", "0")
+
+    if message_id:
+        message.delete(message_id, session.get("admin"), session.get("id"), thread_id)
+
+    return redirect(f"/thread/{thread_id}?edit=1")
+
+
+@app.route("/editmessage", methods=["POST"])
+def edit_message():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    message_id=request.form.get("message_id")
+    content=request.form.get("content", "")
+    thread_id=request.form.get("thread_id")
+
+    if not content.strip():
+        return error("Viesti ei saa olla tyhjä", f"/thread/{thread_id}")
+    if content and message_id:
+        if len(content) > 2000:
+            return error("Viesti on liian pitkä, se saa olla max 2000 merkkiä.", f"/thread/{thread_id}")
+        message.edit(message_id, content, session.get("admin", False), session.get("id", 0))     
+
+    return redirect(f"/thread/{thread_id}?edit=1")
