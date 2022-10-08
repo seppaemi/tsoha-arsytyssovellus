@@ -11,7 +11,7 @@ def create(title, forum_id, user_id):
     return False
 
 def delete(forum_id, thread_id, admin, user_id):
-    count_sql = "SELECT msgcount FROM threads WHERE threads.id=:thread_id;"
+    count_sql = "SELECT messagecount FROM threads WHERE threads.id=:thread_id;"
     count = db.session.execute(count_sql, {"thread_id":thread_id}).fetchone()[0]
     if admin:
         sql = "DELETE FROM threads WHERE id=:thread_id"
@@ -42,7 +42,7 @@ def get_all(forum_id):
     "LEFT JOIN threads ON messages.thread_id=threads.id " \
     "LEFT JOIN forums ON threads.forum_id=forums.id " \
     "GROUP BY threads.id"
-    sql = "SELECT threads.id, threads.title, threads.msgcount, users.username, subq.lastmsg FROM threads " \
+    sql = "SELECT threads.id, threads.title, threads.messagecount, users.username, subq.lastmsg FROM threads " \
         "LEFT JOIN users ON threads.created_by=users.id " \
         f"LEFT JOIN ({subquery}) AS subq ON subq.id=threads.id" \
         " WHERE threads.forum_id=:id " \
