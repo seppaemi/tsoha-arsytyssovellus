@@ -1,12 +1,12 @@
-from db import db
-from amount import decrement_tc, increment_tc, sub 
+from db import db 
+import amount
 
 def create(title, forum_id, user_id):
     if title.strip():
         sql = "INSERT INTO threads(forum_id, created_by, title, created_at) VALUES (:forum_id, :user_id, :title, NOW())"
         db.session.execute(sql, {"forum_id":forum_id, "user_id":user_id, "title":title})
         db.session.commit()
-        increment_tc(forum_id)
+        amount.increment_tc(forum_id)
         return True
     return False
 
@@ -21,8 +21,8 @@ def delete(forum_id, thread_id, admin, user_id):
         params = {"thread_id":thread_id, "user_id":user_id}    
     db.session.execute(sql, params)
     db.session.commit()
-    sub(forum_id, count)
-    decrement_tc(forum_id)
+    amount.sub(forum_id, count)
+    amount.decrement_tc(forum_id)
 
 def edit(thread_id, title, admin, user_id):
     if admin:

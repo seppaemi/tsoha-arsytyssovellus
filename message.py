@@ -1,4 +1,4 @@
-from app import db
+from db import db
 from amount import decrement, increment
 
 def create(text, thread_id, user_id):
