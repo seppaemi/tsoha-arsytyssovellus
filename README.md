@@ -31,3 +31,12 @@ Muut voivat sitten kommentoida ärsytyksenaiheita. Keskustelupalstan ulkoasu tul
 - Voi luoda tunnuksen ja tunnuksen luotua sovellus kirjautuu automaattisesti sisään
 - Käyttäjä voi kirjautua sisään
 - Sovellus toimii herokussa jee :)
+
+### Välipalautus 3:
+- Kaikki suunnitellut luokat toimivat sekä lokaalisti, että herokussa
+- Kaikki edellisen viikon jutut toimivat
+- Voi luoda aiheen sisään langan, jonne voi lisätä viestin
+- Viestin luomisaika tallentuu ja se näytetään myös etusivulla
+- Viestiä voi muokata ja poistaa
+- Sovellus toimii edelleen herokussa
+- Viestejä ei voi vielä etsiä :(
