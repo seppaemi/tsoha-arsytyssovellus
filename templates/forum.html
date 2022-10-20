@@ -47,8 +47,8 @@
             </div>
             
             Luonut: {{thread.username}}<br>
-            Viestejä ketjussa: {{thread.msgcount}}
-            {% if thread.msgcount %}
+            Viestejä ketjussa: {{thread.messagecount}}
+            {% if thread.messagecount %}
                 <br>Viimeisin viesti: {{thread.lastmsg.strftime("%d.%m.%Y klo %H:%M:%S")}}
             {% endif %}
             {% if edit and (session.username == thread.username or session.admin) %}

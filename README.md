@@ -40,3 +40,6 @@ Muut voivat sitten kommentoida ärsytyksenaiheita. Keskustelupalstan ulkoasu tul
 - Viestiä voi muokata ja poistaa
 - Sovellus toimii edelleen herokussa
 - Viestejä ei voi vielä etsiä :(
+
+### Loppupalautus
+- Kaikki toimii

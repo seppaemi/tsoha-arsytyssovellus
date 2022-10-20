@@ -97,7 +97,7 @@ def render_forum(id):
         threads = thread.get_all(id)
         found_forum = forum.get(id)
         if found_forum[1] and not session.get("admin") and found_forum[0] not in session.get("allowed", []):
-            return render_template("norights.html")
+            return render_template("forbidden.html")
         return render_template("forum.html", forum=found_forum, threads=threads, edit=edit)
     else:
         return redirect("/")
@@ -136,7 +136,7 @@ def render_thread(id):
     parent_id = thread.parent(id)
     parent_forum = forum.get(parent_id)
     if parent_forum[1] and not session.get("admin") and parent_forum[0] not in session.get("allowed", []):
-        return render_template("norights.html")
+        return render_template("forbidden.html")
 
     messages = message.get_all(id)
     return render_template("thread.html", messages=messages, thread=found_thread, edit=edit, forum=parent_forum)
@@ -236,3 +236,36 @@ def search():
         return error("Kenttää ei saa jättää tyhjäksi", "/search")
     messages = message.search(query)
     return render_template("search.html", messages=messages, searched=True, query=query)
+
+@app.route("/manage-rights", methods=["GET"])
+def get_rights():
+    if not session.get("admin"):
+        return redirect("/")
+    users = user.get_all()
+    forum_id = request.args.get("id")
+    found_forum = forum.get(forum_id)
+    allowed = forum.get_allowed(forum_id)
+    if not found_forum:
+        return redirect("/")
+    
+    return render_template("managerights.html", users=users, forum=found_forum, allowed=allowed)
+
+@app.route("/manage-rights", methods=["POST"])
+def set_rights():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+    if not session.get("admin"):
+        return redirect("/")
+    forum_id = request.form.get("forum_id")
+    allowed = forum.get_allowed(forum_id)
+    unwanted_keys = ["csrf_token", "forum_id"]
+
+    for (user_id, allow) in request.form.items():
+        if user_id in unwanted_keys:
+            continue
+        parsed_id = int(user_id)
+        if parsed_id not in allowed and allow == "1":
+            user.allow(user_id, forum_id)
+        elif parsed_id in allowed and allow == "0":
+            user.disallow(user_id, forum_id)
+    return redirect("/")
