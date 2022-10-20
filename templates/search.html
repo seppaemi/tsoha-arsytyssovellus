@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{%block title %} - haku{% endblock %}
+{% block content %}
+    <p style="padding-top:1em">
+        <a href="/"><strong>← Etusivulle</strong></a><br>
+    </p>
+
+    <div id="middle">
+        <form action="/search" method="POST">
+            <input type="text" name="query" placeholder="Hakusana">
+            <input type="submit" value="Etsi ärsytyksiä">
+        </form>
+        {% if searched %}
+            Hakusana: "{{query}}"
+        {% endif %}
+        <hr>
+        {% for message in get_flashed_messages() %}
+            <strong style="color:red">{{message}}</strong>
+        {% endfor %}
+        {% for message in messages %}
+            {% if not message.hide or session.admin or session.allowed and message.forum_id in session.allowed %}
+                <strong>Lähettänyt: {{message.username}} {{message.sent_at.strftime("%d.%m.%Y klo %H:%M:%S")}}</strong> <br>
+                {{message.content}} <br>
+                <a href="/thread/{{message.thread_id}}">Siirry ärsytykseen "{{message.title}}" →</a>
+                <hr>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

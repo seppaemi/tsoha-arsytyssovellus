@@ -225,3 +225,14 @@ def edit_message():
         message.edit(message_id, content, session.get("admin", False), session.get("id", 0))     
 
     return redirect(f"/thread/{thread_id}?edit=1")
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    if request.method == "GET":
+        return render_template("search.html", searched=False)    
+    
+    query = request.form.get("query", "")
+    if not query.strip():
+        return error("Kenttää ei saa jättää tyhjäksi", "/search")
+    messages = message.search(query)
+    return render_template("search.html", messages=messages, searched=True, query=query)
