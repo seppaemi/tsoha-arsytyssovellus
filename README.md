@@ -11,12 +11,12 @@ Muut voivat sitten kommentoida ärsytyksenaiheita. Keskustelupalstan ulkoasu tul
 - Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
 - Käyttäjä näkee sovelluksen etusivulla listan keskustelualueista, sekä niiden laatijat ja luomisajat.
 - Käyttäjä voi luoda uuden keskustelualueen.
-- Käyttäjä voi kirjoittaa uuden viestin (tai lisätä uuden kuvan alueelle.(jos aikaa riittää))
+- Käyttäjä voi kirjoittaa uuden viestin.
 - Pakollisia merkintöjä aloituksen yhteydessä ovat havainnon päivämäärä, kellonaika ja alue.
 - Käyttäjä voi muokata lähettämänsä viestin sisältöä tai poistaa sen. 
-- Käyttäjä voi etsiä kaikki aloitukset, joiden osana on annettu sana.
-- Käyttäjä voi ilmoittaa aloituksista ja viesteistä, jotka eivät sovellu palstan aihepiiriin.
-- Vain ylläpitäjä näkee ilmoitetut aloitukset ja viestit. 
+- Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
+- Ylläpitäjä voi luoda salaisen alueen ja valikoida ketkä normaaleista käyttäjistä näkevät sen.
+- Kaikki ylläpitäjät näkevät salaiset alueet.
 
 ## Palautusten sisällöt
 ### Välipalautus 1:
